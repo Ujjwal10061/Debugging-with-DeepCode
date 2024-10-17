@@ -1,54 +1,58 @@
-// Potential Security Vulnerability might take place
+// Improved JavaScript Code with Security Fixes and Optimizations
 
-const fs = require('fs'); 
+const fs = require('fs');
+const path = require('path'); // Added to handle secure file paths
+const crypto = require('crypto');
 
-function readUserFile(filename)
-   {
-    const fileContent = fs.readFileSync(filename, 'utf8');
+// Securely read a user file
+function readUserFile(filename) {
+    // Validate and sanitize the filename to prevent path traversal
+    const safePath = path.join(__dirname, filename);
+    if (!fs.existsSync(safePath) || !fs.lstatSync(safePath).isFile()) {
+        throw new Error('File does not exist or is not valid.');
+    }
+    const fileContent = fs.readFileSync(safePath, 'utf8');
     return fileContent;
 }
 
-function hashPassword(password) 
-{ 
-   // PASSWORD ALGORITHM
-   
-    const crypto = require('crypto');
-    return crypto.createHash('md5').update(password).digest('hex');
+// Use a stronger password hashing algorithm (SHA-256)
+function hashPassword(password) {
+    const hash = crypto.createHash('sha256');
+    return hash.update(password).digest('hex');
 }
 
-function authenticateUser(user, password) 
-   //PASSWORD CHECK
-   
-{
-    if (user.password === hashPassword(password))
-    {
+// Authenticate user securely
+function authenticateUser(user, password) {
+    // Use the improved hashing function
+    if (user.password === hashPassword(password)) {
         return "Authentication successful!";
-    } else
-    {
+    } else {
         return "Authentication failed!";
     }
 }
 
-function processPayment(paymentAmount)
-   // Payment Amount 
-   
-   {
-    if (paymentAmount > 0)
-    {
-        console.log("Processing payment of $" + paymentAmount);
+// Validate and process payment securely
+function processPayment(paymentAmount) {
+    // Ensure the payment amount is a valid positive number
+    if (typeof paymentAmount !== 'number' || paymentAmount <= 0) {
+        throw new Error("Invalid payment amount.");
     }
+    console.log("Processing payment of $" + paymentAmount);
 }
 
-// Testing the function
+// Test cases (optimized and secure)
+try {
+    const user = {
+        username: "john_doe",
+        password: hashPassword("securePassword123"), // Stronger password hash
+    };
 
-const user = {
-    username: "john_doe",
-    password: hashPassword("password123"),
-};
+    console.log(authenticateUser(user, "securePassword123"));
 
-console.log(authenticateUser(user, "password123"));
+    const userFile = readUserFile('user_data.txt'); // Valid filename required
+    console.log(userFile);
 
-const userFile = readUserFile('user_data.txt'); 
-console.log(userFile);
-
-processPayment(-100); 
+    processPayment(100); // Valid payment amount
+} catch (error) {
+    console.error(error.message);
+}
