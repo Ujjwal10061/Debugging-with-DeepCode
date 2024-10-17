@@ -1,35 +1,45 @@
-
+// Potential Security Vulnerability might take place
 
 const fs = require('fs'); 
 
-function readUserFile(filename) {
-   
+function readUserFile(filename)
+   {
     const fileContent = fs.readFileSync(filename, 'utf8');
     return fileContent;
 }
 
-function hashPassword(password) {
-    
+function hashPassword(password) 
+{ 
+   // PASSWORD ALGORITHM
+   
     const crypto = require('crypto');
     return crypto.createHash('md5').update(password).digest('hex');
 }
 
-function authenticateUser(user, password) {
-    // Weak password check
-    if (user.password === hashPassword(password)) {
+function authenticateUser(user, password) 
+   //PASSWORD CHECK
+   
+{
+    if (user.password === hashPassword(password))
+    {
         return "Authentication successful!";
-    } else {
+    } else
+    {
         return "Authentication failed!";
     }
 }
 
-function processPayment(paymentAmount) {
-
-    if (paymentAmount > 0) {
+function processPayment(paymentAmount)
+   // Payment Amount 
+   
+   {
+    if (paymentAmount > 0)
+    {
         console.log("Processing payment of $" + paymentAmount);
     }
 }
 
+// Testing the function
 
 const user = {
     username: "john_doe",
