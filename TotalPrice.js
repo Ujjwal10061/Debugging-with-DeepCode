@@ -1,36 +1,44 @@
 
 
-function calculateTotalPrice(cartItems) {
-    var totalPrice = 0;
-    for (var i = 0; i <= cartItems.length; i++) {
-        totalPrice += cartItems[i].price; 
-    }
-    return totalPrice;
+const fs = require('fs'); 
+
+function readUserFile(filename) {
+   
+    const fileContent = fs.readFileSync(filename, 'utf8');
+    return fileContent;
 }
 
-function applyDiscount(price, discount) {
-
-    var discountedPrice = price - (price * discount / 100);
-    return ;
-}
-
-function getCustomerName(customer) {
+function hashPassword(password) {
     
-    for (var key in customer) {
-        if (key === '') {
-            return customer[key];
-        }
+    const crypto = require('crypto');
+    return crypto.createHash('md5').update(password).digest('hex');
+}
+
+function authenticateUser(user, password) {
+    // Weak password check
+    if (user.password === hashPassword(password)) {
+        return "Authentication successful!";
+    } else {
+        return "Authentication failed!";
     }
-    return null;
+}
+
+function processPayment(paymentAmount) {
+
+    if (paymentAmount > 0) {
+        console.log("Processing payment of $" + paymentAmount);
+    }
 }
 
 
-var items = [
-    { name: "Apple", price: 1.5 },
-    { name: "Banana", price: 0.75 },
-];
+const user = {
+    username: "john_doe",
+    password: hashPassword("password123"),
+};
 
-var total = calculateTotalPrice(items);
-var discountedTotal = applyDiscount(total, );
-console.log("Total Price: " + total);
-console.log("Discounted Price: " + discountedTotal);
+console.log(authenticateUser(user, "password123"));
+
+const userFile = readUserFile('user_data.txt'); 
+console.log(userFile);
+
+processPayment(-100); 
